@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balanced Diet Tracker</title>
+  <link rel="stylesheet" href="style/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="utils.js"></script>
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="progress.js"></script>
+  <script src="tips.js"></script>
+  <script>
+    // Main app logic
+    try {
+      window.currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+      function render() {
+        const page = window.location.hash.slice(1) || (window.currentUser ? 'dashboard' : 'login');
+        document.getElementById('app').innerHTML = ''; // Clear content
+        if (!window.currentUser && page !== 'signup') {
+          window.renderLogin();
+        } else if (!window.currentUser && page === 'signup') {
+          window.renderSignup();
+        } else if (page === 'progress') {
+          window.renderProgress();
+        } else if (page === 'tips') {
+          window.renderTips();
+        } else {
+          window.renderDashboard();
+        }
+      }
+      window.addEventListener('hashchange', render);
+      render();
+    } catch (err) {
+      console.error('App failed to load:', err);
+      document.getElementById('app').innerHTML = '<div class="container"><h2>Error</h2><p>Something went wrong. Please check the console (F12) and try again.</p></div>';
+    }
+  </script>
+</body>
+</html>
